@@ -1,2 +1,2 @@
-require './simple_service.rb'
+require './main.rb'
 run Sinatra::Application
