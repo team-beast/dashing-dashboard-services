@@ -7,8 +7,13 @@ require_relative "lib/DashboardNotifier"
 dashboard_notifier = DashboardNotifier.new
 pipelines = PipelineList.new(dashboard_notifier)
 
-get('/') do
-	pipelines.get
+get('/') do	
+	callback = params['callback']
+    json = pipelines.get.to_json
+    
+    content_type(callback ? :js : :json)
+    response = callback ? "#{callback}(#{json})" : json      
+    response
 end
 
 post '/fail' do 
