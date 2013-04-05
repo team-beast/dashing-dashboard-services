@@ -4,8 +4,19 @@ require 'json'
 require_relative "lib/PipelineList"
 require_relative "lib/DashboardNotifier"
 
+class PassedNotifier
+	def push(list)
+		HTTParty.post('http://teambeast.herokuapp.com/widgets/test_passed',
+  		:body =>  { auth_token: "YOUR_AUTH_TOKEN",items:list}.to_json)
+	end
+end
+
+
 dashboard_notifier = DashboardNotifier.new
+passed_notifier = PassedNotifier.new
+
 pipelines = PipelineList.new(dashboard_notifier)
+passed_pipelines = PipelineList.new(passed_notifier)
 
 get('/') do	
 	callback = params['callback']
@@ -30,7 +41,12 @@ post '/pass' do
 	pipelines_to_add.each do |pipeline|
 		pipelines.remove( generate_dashing_object(pipeline) )
 	end
+
+	passed_pipelines = PipelineList.new(generate_dashing_object(passed_notifier))
 end
+
+
+
 
 
 def generate_dashing_object(json_object)
