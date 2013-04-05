@@ -40,9 +40,8 @@ post '/pass' do
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
 		pipelines.remove( generate_dashing_object(pipeline) )
+		passed_pipelines.add( generate_dashing_object(pipeline) )
 	end
-
-	passed_pipelines = PipelineList.new(generate_dashing_object(passed_notifier))
 end
 
 
