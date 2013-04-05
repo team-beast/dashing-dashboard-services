@@ -1,4 +1,4 @@
-task :default => [:dependencies, :ruby_tests, :commit]
+task :default => [:dependencies, :ruby_tests, :commit, :deploy]
 
 task :dependencies do
 	sh "bundle install"
@@ -19,4 +19,11 @@ task :commit do
 	git.add
 	git.commit(:message => 'dashboard_commit')
 	git.push	
+end
+
+task :deploy do
+	puts "Deploying to heroku"
+	require 'git_repository'
+	git = GitRepository.new(:remote => "heroku")
+	git.push
 end
