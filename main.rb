@@ -4,24 +4,14 @@ require 'json'
 require_relative "lib/PipelineList"
 require_relative "lib/DashboardNotifier"
 
-class PassedNotifier
-	def push(list)
-		HTTParty.post('http://teambeast.herokuapp.com/widgets/test_passed',
-  		:body =>  { auth_token: "YOUR_AUTH_TOKEN",items:list}.to_json)
-	end
-end
-
-
 dashboard_notifier = DashboardNotifier.new
-passed_notifier = PassedNotifier.new
 
 pipelines = PipelineList.new(dashboard_notifier)
-passed_pipelines = PipelineList.new(passed_notifier)
 
+#needs to respond with JSON for keep-alive service.
 get('/') do	
 	callback = params['callback']
     json = pipelines.get.to_json
-    
     content_type(callback ? :js : :json)
     response = callback ? "#{callback}(#{json})" : json      
     response
@@ -40,13 +30,8 @@ post '/pass' do
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
 		pipelines.remove( generate_dashing_object(pipeline) )
-		passed_pipelines.add( generate_dashing_object(pipeline) )
 	end
 end
-
-
-
-
 
 def generate_dashing_object(json_object)
 	pipeline_name = json_object["label"]
