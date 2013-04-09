@@ -32,7 +32,6 @@ post '/pass' do
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
 		broken_pipelines.remove( generate_dashing_object(pipeline) )
-		bruilding_pipelines.add( generate_dashing_object(pipeline) )
 	end
 end
 
@@ -40,6 +39,7 @@ post '/building' do
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
 		broken_pipelines.remove( generate_dashing_object(pipeline) )
+		bruilding_pipelines.add( generate_dashing_object(pipeline) )
 	end
 end
 
