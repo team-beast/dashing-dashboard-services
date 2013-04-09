@@ -25,6 +25,7 @@ post '/fail' do
 		pipeline_name = pipeline["label"]
 		stage_name =  pipeline["value"]
 		broken_pipelines.add( generate_dashing_object(pipeline) )
+		bruilding_pipelines.remove( generate_dashing_object(pipeline) )
 	end
 end
 
@@ -32,6 +33,7 @@ post '/pass' do
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
 		broken_pipelines.remove( generate_dashing_object(pipeline) )
+		bruilding_pipelines.remove( generate_dashing_object(pipeline) )
 	end
 end
 
