@@ -13,7 +13,7 @@ bruilding_pipelines = PipelineList.new(building_builds_dashboard_notifier)
 #needs to respond with JSON for keep-alive service.
 get('/') do	
 	callback = params['callback']
-    json = broken_pipelines.get.to_json
+    json = bruilding_pipelines.get.to_json
     content_type(callback ? :js : :json)
     response = callback ? "#{callback}(#{json})" : json      
     response
