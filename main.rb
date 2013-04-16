@@ -4,7 +4,7 @@ require 'json'
 require_relative "lib/PipelineList"
 require_relative "lib/DashboardNotifier"
 
-broken_builds_dashboard_notifier = DashboardNotifier.new("broken_builds_push")
+broken_builds_dashboard_notifier = DashboardNotifier.new("build_status")
 building_builds_dashboard_notifier = DashboardNotifier.new("buidling_builds_push")
 broken_pipelines = PipelineList.new(broken_builds_dashboard_notifier)
 bruilding_pipelines = PipelineList.new(building_builds_dashboard_notifier)
