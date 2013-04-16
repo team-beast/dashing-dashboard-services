@@ -22,8 +22,6 @@ end
 post '/fail' do 
 	pipelines_to_add = JSON.parse(request.body.read)["items"]
 	pipelines_to_add.each do |pipeline|
-		pipeline_name = pipeline["label"]
-		stage_name =  pipeline["value"]
 		broken_pipelines.add( generate_dashing_object(pipeline) )
 		bruilding_pipelines.remove( generate_dashing_object(pipeline) )
 	end
@@ -45,9 +43,9 @@ post '/building' do
 	end
 end
 
-def generate_dashing_object(json_object)
-	pipeline_name = json_object["label"]
-	stage_name =  json_object["value"]
-	return {:label => pipeline_name, :value => stage_name, 
-		:pipeline_name => pipeline_name, :stage_name => stage_name}
+def generate_dashing_object(json_object)	
+	p json_object
+	pipeline_name = json_object["title"]
+	stage_name =  json_object["stage"]
+	return {:pipeline_name => pipeline_name, :stage_name => stage_name}
 end
