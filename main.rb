@@ -44,7 +44,6 @@ post '/building' do
 end
 
 def generate_dashing_object(json_object)	
-	p json_object
 	pipeline_name = json_object["title"]
 	stage_name =  json_object["stage"]
 	return {:pipeline_name => pipeline_name, :stage_name => stage_name}
