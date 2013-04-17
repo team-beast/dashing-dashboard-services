@@ -21,6 +21,6 @@ class PipelineSet
 	private 
 
 	def are_same?(pipeline_one, pipeline_two)
-		pipeline_one[:stage_name] == pipeline_two[:stage_name] && pipeline_one[:pipeline_name] == pipeline_two[:pipeline_name]
+		(pipeline_one[:stage_name] == pipeline_two[:stage_name]) && (pipeline_one[:pipeline_name] == pipeline_two[:pipeline_name])
 	end
 end
