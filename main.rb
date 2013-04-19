@@ -43,5 +43,5 @@ def generate_dashing_object(json_object)
 	stage_name =  json_object["stage"]
 	status = json_object["status"]
 	last_build_status = json_object["last_build_status"]
-	return {:pipeline_name => pipeline_name, :stage_name => stage_name, :status =>status :last_build_status => last_build_status }
+	return {:pipeline_name => pipeline_name, :stage_name => stage_name, :status =>status, :last_build_status => last_build_status }
 end
