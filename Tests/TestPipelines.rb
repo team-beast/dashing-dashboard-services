@@ -45,6 +45,6 @@ class FakeDashboardNotifier
 	end
 
 	def push(request_body)
-		@recieved_list = request_body[:list]
+		@recieved_list = request_body[:items]
 	end
 end

@@ -7,6 +7,6 @@ class DashboardNotifier
 	def push(request_body)		
 		request_body[:auth_token] = "YOUR_AUTH_TOKEN"
 		HTTParty.post("#{Configuration::DASHBOARD_URL}/widgets/#{@widget_id}",
-  		:body =>  request_body.to_json)
+  		:body =>  request_body.to_json)  		
 	end
 end

@@ -9,13 +9,13 @@ class Pipelines
 
 	def add(pipeline)
 		@list.add(pipeline)
-		@dashboard_notifier.push({:list => @list.to_a})
+		@dashboard_notifier.push({:items => @list.to_a})
 	end
 
 
 	def remove(pipeline)
 		@list.remove(pipeline)
-		@dashboard_notifier.push({:list => @list.to_a})
+		@dashboard_notifier.push({:items => @list.to_a})
 	end
 
 	def get
