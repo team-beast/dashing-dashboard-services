@@ -38,10 +38,17 @@ class TestCounterRepository < Test::Unit::TestCase
 		result_of_second_call = counter_values_repository.get
 		assert_equal(counter_entries, result_of_second_call)
 	end
+
+	def test_that_counters_are_added_by_counter_name
+		counter_name = "Bill"
+		mock_redis_wrapper = MockRedisWrapper.new({})
+		Counter::CounterValuesRepository.new(counter_name, mock_redis_wrapper).add
+		assert_equal("counter/#{counter_name}", mock_redis_wrapper.set_data[:key])
+	end
 end
 
 class MockRedisWrapper
-	attr_reader :get_data, :get_calls
+	attr_reader :get_data, :get_calls, :set_data
 
 	def initialize(options)
 		@get_result = options[:get_result]
@@ -52,6 +59,10 @@ class MockRedisWrapper
 		@get_calls+=1
 		@get_data = options		
 		@get_result
+	end
+
+	def set(options)
+		@set_data = options
 	end
 end
 
@@ -81,14 +92,19 @@ module Counter
 	class CounterValuesRepository
 		COUNTER_KEY_PREFIX = 'counter'
 
-		def initialize(counter_name, redis_wrapper)			
-			repository_key = "#{COUNTER_KEY_PREFIX}/#{counter_name}"			
-			redis_counter_value = redis_wrapper.get(key: repository_key)
-			@counter_values = CounterValuesSerializer.new.deserialize(redis_counter_value)
+		def initialize(counter_name, redis_wrapper)						
+			@repository_key = "#{COUNTER_KEY_PREFIX}/#{counter_name}"			
+			@redis_wrapper = redis_wrapper
+			redis_counter_value = @redis_wrapper.get(key: @repository_key)
+			@counter_values = CounterValuesSerializer.new.deserialize(redis_counter_value)			
 		end
 
 		def get
 			@counter_values
+		end
+
+		def add
+			@redis_wrapper.set(key: @repository_key)
 		end
 	end
 
