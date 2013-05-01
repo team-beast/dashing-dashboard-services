@@ -42,8 +42,25 @@ class TestCounterRepository < Test::Unit::TestCase
 	def test_that_counters_are_added_by_counter_name
 		counter_name = "Bill"
 		mock_redis_wrapper = MockRedisWrapper.new({})
-		Counter::CounterValuesRepository.new(counter_name, mock_redis_wrapper).add
+		Counter::CounterValuesRepository.new(counter_name, mock_redis_wrapper).add({})
 		assert_equal("counter/#{counter_name}", mock_redis_wrapper.set_data[:key])
+	end
+
+	def test_that_added_counter_value_is_set_in_json_format_in_redis
+		counter_value = {:x => 12, :y => 1001}
+		mock_redis_wrapper = MockRedisWrapper.new({})
+		Counter::CounterValuesRepository.new("", mock_redis_wrapper).add(counter_value)
+		assert_equal(counter_value.to_json, mock_redis_wrapper.set_data[:value])
+	end
+	
+	def test_that_second_added_is_combination_of_both_counter_values_in_comma_separated_json_format
+		counter_value1 = {:x => 12, :y => 1001}
+		counter_value2 = {:x => 13, :y => 1002}
+		mock_redis_wrapper = MockRedisWrapper.new({})
+		counter_values_repository = Counter::CounterValuesRepository.new("", mock_redis_wrapper)
+		counter_values_repository.add(counter_value1)
+		counter_values_repository.add(counter_value2)
+		assert_equal("#{counter_value1.to_json}, #{counter_value2.to_json}", mock_redis_wrapper.set_data[:value])
 	end
 end
 
@@ -56,7 +73,7 @@ class MockRedisWrapper
 	end
 
 	def get(options)
-		@get_calls+=1
+		@get_calls += 1
 		@get_data = options		
 		@get_result
 	end
@@ -65,28 +82,6 @@ class MockRedisWrapper
 		@set_data = options
 	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module Counter
 	class CounterValuesRepository
@@ -103,8 +98,13 @@ module Counter
 			@counter_values
 		end
 
-		def add
-			@redis_wrapper.set(key: @repository_key)
+		def add(counter_value)			
+			@counter_values.push(counter_value)				
+			max_c = @counter_values.map do |item |
+				item.to_json
+			end
+			json_counter_values = max_c.join(", ")			
+			@redis_wrapper.set(key: @repository_key, value: json_counter_values)
 		end
 	end
 

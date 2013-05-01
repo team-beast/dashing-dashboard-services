@@ -1,10 +1,9 @@
 require_relative "../lib/DashboardNotifier"
 points = []
 
-get %r{/counter/([\w]+)} do | counter_name |
-	counter_notifier = DashboardNotifier.new(counter_name)
-	random_number = rand(30)
-	point = {:x => points.length, :y => random_number}
-	points.push(point)	
+post %r{/counter/([\w]+)} do | counter_name |
+	counter_value = JSON.parse(request.body.read)["counter"]
+	counter_notifier = DashboardNotifier.new(counter_name)	
+	points.push(counter_value)	
 	counter_notifier.push({:points => points})	
 end
