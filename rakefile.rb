@@ -6,7 +6,7 @@ end
 
 task :ruby_tests do
 	require 'peach'
-	Dir["./tests/**/*.rb"].peach do | file |
+	Dir["./Tests/**/*.rb"].peach do | file |
 		sh "ruby #{file}"
 	end
 end
